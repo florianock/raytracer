@@ -43,6 +43,16 @@ Scenario: Adding two tuples
     And a2 ← tuple(-2, 3, 1, 0)
    Then a1 + a2 = tuple(1, 1, 6, 1)
 
+Scenario: Adding two points makes no sense
+  Given p1 ← point(3, -2, 5)
+    And p2 ← point(-2, 3, 1)
+   Then p1 + p2 throws IllegalArgumentException
+
+Scenario: Subtracting a point from a vector makes no sense
+  Given v ← vector(3, -2, 5)
+    And p ← point(-2, 3, 1)
+   Then v - p throws IllegalArgumentException
+
 Scenario: Subtracting two points
   Given p1 ← point(3, 2, 1)
     And p2 ← point(5, 6, 7)
@@ -67,6 +77,10 @@ Scenario: Negating a tuple
   Given a ← tuple(1, -2, 3, -4)
   Then -a = tuple(-1, 2, -3, 4)
 
+Scenario: Negating a point throws exception
+  Given p ← point(3, -2, 5)
+  Then -p throws IllegalArgumentException
+
 Scenario: Multiplying a tuple by a scalar
   Given a ← tuple(1, -2, 3, -4)
   Then a * 3.5 = tuple(3.5, -7, 10.5, -14)
@@ -75,9 +89,21 @@ Scenario: Multiplying a tuple by a fraction
   Given a ← tuple(1, -2, 3, -4)
   Then a * 0.5 = tuple(0.5, -1, 1.5, -2)
 
+Scenario: Multiplying a point by a scalar throws exception
+  Given p ← point(3, -2, 5)
+  Then p * 3 throws IllegalArgumentException
+
+Scenario: Multiplying a point by a fraction throws exception
+  Given p ← point(3, -2, 5)
+  Then p * 0.5 throws IllegalArgumentException
+
 Scenario: Dividing a tuple by a scalar
   Given a ← tuple(1, -2, 3, -4)
   Then a / 2 = tuple(0.5, -1, 1.5, -2)
+
+Scenario: Dividing a point by a scalar throws exception
+  Given p ← point(3, -2, 5)
+  Then p / 3.4 throws IllegalArgumentException
 
 Scenario: Computing the magnitude of vector(1, 0, 0)
   Given v ← vector(1, 0, 0)
@@ -99,6 +125,10 @@ Scenario: Computing the magnitude of vector(-1, -2, -3)
   Given v ← vector(-1, -2, -3)
   Then magnitude(v) = √14
 
+Scenario: Computing the magnitude of a point throws exception
+  Given p ← point(-1, -2, -3)
+  Then magnitude(p) throws IllegalArgumentException
+
 Scenario: Normalizing vector(4, 0, 0) gives (1, 0, 0)
   Given v ← vector(4, 0, 0)
   Then normalize(v) = vector(1, 0, 0)
@@ -107,6 +137,10 @@ Scenario: Normalizing vector(1, 2, 3)
   Given v ← vector(1, 2, 3)
                                   # vector(1/√14,   2/√14,   3/√14)
   Then normalize(v) = approximately vector(0.26726, 0.53452, 0.80178)
+
+Scenario: Normalizing a point throws exception
+  Given p ← point(4, 0, 0)
+  Then normalize(p) throws IllegalArgumentException
 
 Scenario: The magnitude of a normalized vector
   Given v ← vector(1, 2, 3)
@@ -118,7 +152,29 @@ Scenario: The dot product of two tuples
     And b ← vector(2, 3, 4)
   Then dot(a, b) = 20
 
+Scenario: The dot product of a point as first arg throws exception
+  Given p ← point(1, 2, 3)
+    And v ← vector(2, 3, 4)
+  Then dot(p, v) throws exception
+
+Scenario: The dot product of a point as second arg throws exception
+  Given v ← vector(1, 2, 3)
+  And p ← point(2, 3, 4)
+  Then dot(v, p) throws exception
+
 Scenario: The cross product of two vectors
+  Given a ← vector(1, 2, 3)
+    And b ← vector(2, 3, 4)
+  Then cross(a, b) = vector(-1, 2, -1)
+    And cross(b, a) = vector(1, -2, 1)
+
+Scenario: The cross product vector and point throws exception
+  Given v ← vector(1, 2, 3)
+    And p ← point(2, 3, 4)
+  Then cross(v, p) throws IllegalArgumentException
+    And cross(p, v) throws IllegalArgumentException
+
+Scenario: The cross product of point and vector throws exception
   Given a ← vector(1, 2, 3)
     And b ← vector(2, 3, 4)
   Then cross(a, b) = vector(-1, 2, -1)

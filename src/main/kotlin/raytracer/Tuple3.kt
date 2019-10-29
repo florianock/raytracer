@@ -1,13 +1,15 @@
 package raytracer
 
+import kotlin.math.abs
+
 data class Tuple3(val red: Float, val green: Float, val blue: Float) {
 
     override fun equals(other: Any?): Boolean {
         val a = other as Tuple3
-        val epsilon = 0.00001
-        return  this.red - a.red < epsilon &&
-                this.green - a.green < epsilon &&
-                this.blue - a.blue < epsilon
+        val eps = 0.00001
+        return  abs(this.red - a.red) < eps &&
+                abs(this.green - a.green) < eps &&
+                abs(this.blue - a.blue) < eps
     }
 
     operator fun plus(a: Tuple3): Tuple3 {
@@ -15,7 +17,7 @@ data class Tuple3(val red: Float, val green: Float, val blue: Float) {
     }
 
     operator fun minus(a: Tuple3): Tuple3 {
-        return tuple(this.red + a.red, this.green + a.green, this.blue + a.blue)
+        return tuple(this.red - a.red, this.green - a.green, this.blue - a.blue)
     }
 
     operator fun times(multiplier: Float): Tuple3 {
@@ -40,4 +42,13 @@ data class Tuple3(val red: Float, val green: Float, val blue: Float) {
         result = 31 * result + blue.hashCode()
         return result
     }
+}
+
+// colors
+fun tuple(x: Float, y: Float, z: Float): Tuple3 {
+    return Tuple3(x, y, z)
+}
+
+fun color(x: Float, y: Float, z: Float): Tuple3 {
+    return tuple(x, y, z)
 }

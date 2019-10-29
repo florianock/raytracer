@@ -7,6 +7,7 @@ import io.cucumber.java8.En
 import junit.framework.TestCase.*
 import kotlin.math.abs
 import kotlin.math.sqrt
+import kotlin.test.assertFailsWith
 
 class StepDefs: En {
     private var world: MutableMap<String, Any> = mutableMapOf()
@@ -117,6 +118,37 @@ class StepDefs: En {
         }
     }
 
+    @Then("^(\\w\\d?) ([+-]) (\\w\\d?) throws IllegalArgumentException$")
+    fun someOpsThrowException(tuple1: String, op: String, tuple2: String) {
+        val t1 = world[tuple1] as Tuple4
+        val t2 = world[tuple2] as Tuple4
+        assertFailsWith<IllegalArgumentException>{
+            when (op) {
+                "+" -> t1 + t2
+                "-" -> t1 - t2
+            }
+        }
+    }
+
+    @Then("-p throws IllegalArgumentException")
+    fun negatingAPointThrowsException() {
+        val p = world["p"] as Tuple4
+        assertFailsWith<IllegalArgumentException> {
+            -p
+        }
+    }
+
+    @Then("^(\\w) ([*/]) ([-+]?\\d*\\.?\\d+) throws IllegalArgumentException$")
+    fun someOpsThrowException(point: String, op: String, float: Float) {
+        val p = world[point] as Tuple4
+        assertFailsWith<IllegalArgumentException>{
+            when (op) {
+                "*" -> p * float
+                "/" -> p / float
+            }
+        }
+    }
+
     @Then("^(\\w+) ([-]) (\\w+) = (vector|point)\\(([-+]?\\d*\\.?\\d+), ([-+]?\\d*\\.?\\d+), ([-+]?\\d*\\.?\\d+)\\)$")
     fun tupleMinusTuple(pointA: String, op: String, pointB: String, ctr: String, x: Float, y: Float, z: Float) {
         val a = world[pointA] as Tuple4
@@ -161,6 +193,17 @@ class StepDefs: En {
         assertEquals(vector(x, y, z), v.normalize())
     }
 
+    @Then("^(normalize|magnitude)\\(p\\) throws IllegalArgumentException$")
+    fun normalizeOrMagnitudeOfPointThrowsException(func: String) {
+        val p = world["p"] as Tuple4
+        assertFailsWith<IllegalArgumentException> {
+            when (func) {
+                "normalize" -> p.normalize()
+                "magnitude" -> p.magnitude()
+            }
+        }
+    }
+
     @Then("^normalize\\(v\\) = approximately vector\\(([-+]?\\d*\\.?\\d+), ([-+]?\\d*\\.?\\d+), ([-+]?\\d*\\.?\\d+)\\)$")
     fun normalizeVectorEpsilon(x: Float, y: Float, z: Float) {
         val v = world["v"] as Tuple4
@@ -182,11 +225,29 @@ class StepDefs: En {
         assertEquals(dp, a.dot(b))
     }
 
+    @Then("^dot\\((\\w), (\\w)\\) throws exception$")
+    fun dotProductWithPointThrowsException(t1: String, t2: String) {
+        val t1 = world[t1] as Tuple4
+        val t2 = world[t2] as Tuple4
+        assertFailsWith<IllegalArgumentException> {
+            t1.dot(t2)
+        }
+    }
+
     @Then("^cross\\((\\w+), (\\w+)\\) = vector\\(([-+]?\\d*\\.?\\d+), ([-+]?\\d*\\.?\\d+), ([-+]?\\d*\\.?\\d+)\\)$")
     fun crossProductTest(a: String, b: String, x: Float, y: Float, z: Float) {
         val c = world[a] as Tuple4
         val d = world[b] as Tuple4
         assertEquals(vector(x, y, z), c.cross(d))
+    }
+
+    @Then("^cross\\((\\w), (\\w)\\) throws IllegalArgumentException$")
+    fun crossProductOnPointThrowsException(t1: String, t2: String) {
+        val t1 = world[t1] as Tuple4
+        val t2 = world[t2] as Tuple4
+        assertFailsWith<IllegalArgumentException> {
+            t1.cross(t2)
+        }
     }
 
     @Then("^c\\.red = ([-+]?\\d*\\.?\\d+)$")
