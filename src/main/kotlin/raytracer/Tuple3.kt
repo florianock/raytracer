@@ -49,6 +49,6 @@ fun tuple(x: Float, y: Float, z: Float): Tuple3 {
     return Tuple3(x, y, z)
 }
 
-fun color(x: Float, y: Float, z: Float): Tuple3 {
-    return tuple(x, y, z)
+fun color(red: Float, green: Float, blue: Float): Tuple3 {
+    return tuple(red, green, blue)
 }
