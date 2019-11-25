@@ -12,6 +12,14 @@ data class Canvas(val width: Int, val height: Int) {
         return canvas.toList()
     }
 
+    fun ResetToColor(color: Tuple3) {
+        Array(width) {
+            Array(height) {
+                color
+            }
+        }
+    }
+
     fun getRow(num: Int): Array<Tuple3>  {
         return canvas[num];
     }
@@ -29,7 +37,7 @@ data class Canvas(val width: Int, val height: Int) {
     }
 
     private fun canvasToPpm(): String {
-        return "2"
+        return "2\n"
     }
 
     private fun ppmHeader(): String {

@@ -58,9 +58,19 @@ class CanvasStepDefs(private var world: World) : En {
             world.ppm = world.canvas.toPpm()
         }
 
+        When("^every pixel of c is set to color\\(([-+]?\\d*\\.?\\d+), ([-+]?\\d*\\.?\\d+), ([-+]?\\d*\\.?\\d+)\\)$") { r: Float, g: Float, b: Float ->
+            val color = color(r, g, b)
+            world.canvas.ResetToColor(color)
+        }
+
         Then("lines {int}-{int} of ppm are") { l1: Int, l2: Int, docString: String ->
 //            var lines =
             assertEquals(docString, world.ppm)
+        }
+
+        Then("ppm ends with a newline character") {
+            val lastChar = world.ppm[world.ppm.length-1]
+            assertEquals('\n', lastChar)
         }
     }
 }
